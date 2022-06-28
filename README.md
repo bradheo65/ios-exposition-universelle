@@ -14,15 +14,17 @@
 - [키워드](#키워드)
 - [핵심경험](#핵심경험)
 - [기능설명](#기능설명)
-- [1️⃣ STEP 1](https://github.com/bradheo65/ios-exposition-universelle/blob/Step02/Docs/Step01.md)
-- [2️⃣ STEP 2](https://github.com/bradheo65/ios-exposition-universelle/blob/Step02/Docs/Step02.md)
-- [3️⃣ STEP 3](https://github.com/bradheo65/ios-exposition-universelle/blob/Step03/Docs/Step03.md)
+- [Debugging](#Debugging)
+- [1️⃣ Step01.md](https://github.com/bradheo65/ios-exposition-universelle/blob/Step02/Docs/Step01.md)
+- [2️⃣ Step02.md](https://github.com/bradheo65/ios-exposition-universelle/blob/Step02/Docs/Step02.md)
+- [3️⃣ Step03.d](https://github.com/bradheo65/ios-exposition-universelle/blob/Step03/Docs/Step03.md)
 
 ## 개발자 소개
 |브래드|그루트|
 |:---:|:---:|
-|<image src = "https://user-images.githubusercontent.com/45350356/174251611-46adf61c-93fa-42a0-815b-2c998af1c258.png" width="250" height="250">| <image src = "https://i.imgur.com/tvNHQNl.jpg" width="250" height="250">
+|<image src = "https://user-images.githubusercontent.com/45350356/174251611-46adf61c-93fa-42a0-815b-2c998af1c258.png" width="250" height="250">| <image src = "https://i.imgur.com/Cxc3e7j.jpg" width="250" height="250">
 |[브래드](https://github.com/bradheo65)|[그루트](https://github.com/Groot-94)|
+
 
 ## 프로젝트 소개
 1900년 파리 만국박람회에서 소개된 한국의 문화유산을 앱으로 확인해보자.
@@ -117,4 +119,97 @@
     Int 타입 Data parsing을 위한 Extention 구현.
 ### **Asset**
     Asset 파일의 NameSpace 구현.
+
+## Debugging
+
+### STEP 1 
+#### `Json decode 테스트 nil 반환`
+- ExpoInformation 구조체를 구현하고 JsonDecode를 하는 과정에서 nil이 반환되는 문제가 있었습니다. 그래서 아래의 순서대로 디버깅을 해보았습니다.
+
+    1. Assets에서 Json 파일을 가져오는게 문제인지 LLDB를 활용해 확인했지만, 파일을 가져오고 있었습니다.
+    2. 직접 Json 데이터를 작성해서 테스트 하는 방법을 사용해서 확인했으나, 동일하게 nil을 반환했습니다.
+    3. ExpoInformation 구조체의 프로퍼티를 확인하는 과정에서 특정 Key에 오타가 있었음을 알 수 있었습니다.
+>결론 : 하나의 Key 값에 문제가 있어도 Decode 전체에 문제가 생긴다는 걸 알 수 있었습니다.
+---
+
+### STEP 2 
+#### 이미지 뷰 크기 설정 과정
+- 이미지 뷰 크기를 정해서 스택뷰에 넣는 방법으로 했을 때와 이미지 뷰 크기 설정 없이 스택 뷰의 높이만 크기를 설정했을 때 차이점에 대해 진행해 보았다.
+#### 이전화면 코드
+```swift
+let rightKoreanFlagImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "flag")
+        imageView.contentMode = .scaleAspectFit
+}()
+
+private func setSubStackViewConstraints() {
+        expo1900SubStackView.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor).isActive = true
+        expo1900SubStackView.bottomAnchor.constraint(equalTo: expo1900StackView.bottomAnchor).isActive = true
+        expo1900SubStackView.leadingAnchor.constraint(equalTo: expo1900StackView.leadingAnchor).isActive = true
+        expo1900SubStackView.trailingAnchor.constraint(equalTo: expo1900StackView.trailingAnchor).isActive = true
+        expo1900SubStackView.widthAnchor.constraint(equalTo: expo1900StackView.widthAnchor).isActive = true
+        expo1900SubStackView.heightAnchor.constraint(lessThanOrEqualToConstant: 50).isActive = true
+    }
+```
+#### 수정화면 코드
+```swift
+    let expo1900SubStackView: UIStackView = {
+    let stackView = UIStackView()
     
+    stackView.translatesAutoresizingMaskIntoConstraints = false
+    stackView.axis = .horizontal
+    stackView.alignment = .center
+    stackView.distribution = .equalCentering
+    return stackView
+    }()
+    
+    let leftFlagImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "flag")
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }()
+    
+    let rightFlagImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "flag")
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }()
+    
+    let nextViewButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("한국의 출품작 보러가기", for: .normal)
+        button.setTitleColor(UIColor.blue, for: .normal)
+        button.setContentCompressionResistancePriority(UILayoutPriority(751), for: .horizontal)
+        button.addTarget(nil, action: #selector(tappedNextViewButtonEvent), for: .touchUpInside)
+        return button
+    }()    
+```
+
+|이전화면|수정화면|
+|:---:|:---:|
+|<image src = "https://user-images.githubusercontent.com/45350356/174255420-fcae28f0-87d5-4a03-b60d-6e532b1372fa.png" width="300" height="700">|<image src = "https://i.imgur.com/rYGiTFj.png" width="300" height="700"> |
+
+- 이미지 뷰 넓이 지정(최대 50) → 스택 뷰 높이 지정(최대 50) → 우선 순위 지정 → Prior를 값(750)에서 751로 수정
+- 최종적으로는 ImageView와 Button을 포함하는 StackView의 설정을 변경해서 원하는 결과를 얻을 수 있었다
+---
+
+### STEP 3 
+#### 두 번째 화면의 가로모드에서 테이블뷰의 cell이 노치를 침범하는 문제
+- 문제해결을 위한 시도 1
+    - TableView Controller의 self.view의 Trailing.safeLayoutGuide와 TableView의 Trailing을 동일하게 설정했으나 문제해결 실패.
+        - 실패이유 파악
+            - TableView Controller는 기본 View가 TableView 이기 때문에 자체 뷰의 간격을 줄 수 없을거라고 생각이 들었다.
+- 문제해결을 위한 시도 2
+    - TableView Controller을 사용하는 방법에서 UIView Controller를 사용하고 Table View Delegate, Table View Data source를 채택하는 방법으로 수정
+    - UIView Controller의 View에 Table View를 추가하고, Trailing을 설정하는 방법으로 해결.
+    
+| **수정 전** | 
+| :--------: |
+| <image src = "https://i.imgur.com/kmjHfqm.png" width="600" height="250">|
+| **수정 후** |
+| <image src = "https://i.imgur.com/b1ZEix8.png" width="600" height="250">|
+
+---
