@@ -23,6 +23,16 @@
 ``` 
 ---
 ### STEP 3 Answers
+#### Q. Dynamic Type를 적용하면서 image View도 적용해야 할지 고민을 했습니다.
+> 여러분이 Label과 Image View 모두 확대가 되는 것보다는 label이 확대되는 게 좋다라고 판단하신데 이유가 있을 것 같습니다. 만약 이런 판단이 생긴다면 논의해보신 이유를 함께 공유해주시면 더 용이하게 이야기를 나눌 수 있을 것 같아요.
+제 생각에는 썸네일 같은 이미지에 dynamic type을 적용하면 셀이 예상치 못하게 커져서 텍스트로 정보전달을하기 어려워질 수 있으니 적용하지 않을 것 같고, 상세페이지의 이미지에는 적용을 고려해볼 수 있을 것 같아요. 만약 이미지에 Dynamic type을 적용하지 않는다고 하더라도 이미지를 탭하면 사진첩 앱처럼 이미지를 확대해서 볼 수 있는 페이지를 구성할 수도 있을 것 같네요.
+
+#### Q. 길이가 긴 Label의 경우 VoiceOver 작동에 문제가 있었습니다.
+> 이건 Voiceover쪽에 버그가 있는 것으로 보이네요. 대괄호([]) 이후에 텍스트가 있으면 voiceover가 처리를 못하는 것 같습니다. 실제로 대괄호를 소괄호로 변경해서 voiceover를 실행하면 잘 동작하네요. 현상에 대응하는 방법으로는 replacingOccurrences와 같은 메서드를 활용해서 대괄호를 소괄호로 변경하여 적용하는 방법이 있을 것 같아요.
+
+#### Q. Line Wrapping
+> 사용자는 저희가 만드는 화면을 통해 정보를 전달 받으므로 최종적인 줄바꿈 처리등이 미흡하다면 저희쪽에서 처리해주는 것이 맞다고 생각해요. 그래서 필요하다면 전달받은 데이터도 변경할 수 있다고 생각합니다.
+
 ---
 ### STEP 3 Debugging
 #### 두 번째 화면의 가로모드에서 테이블뷰의 cell이 노치를 침범하는 문제
@@ -46,6 +56,5 @@
 - Accessibility
 - Dynamic Types
 ---
-### STEP 3 Reviews
----
-### STEP 3 Updates
+### STEP 3 Reviews And Update
+[STEP 3 Pull Request](https://github.com/yagom-academy/ios-exposition-universelle/pull/194)
