@@ -155,8 +155,6 @@ final class ExpoMainViewController: UIViewController {
         subStackView.bottomAnchor.constraint(equalTo: mainStackView.bottomAnchor).isActive = true
         subStackView.leadingAnchor.constraint(equalTo: mainStackView.leadingAnchor).isActive = true
         subStackView.trailingAnchor.constraint(equalTo: mainStackView.trailingAnchor).isActive = true
-        subStackView.heightAnchor.constraint(lessThanOrEqualToConstant: DetailSetUp.subStackViewMaxHeight).isActive = true
-        nextViewButton.widthAnchor.constraint(greaterThanOrEqualTo: subStackView.widthAnchor, multiplier: DetailSetUp.nextViewButtonWidthAnchorMultiplier).isActive = true
     }
     
     @objc private func tappedNextViewButtonEvent() {
@@ -173,6 +171,7 @@ final class ExpoMainViewController: UIViewController {
             imageView.accessibilityLabel = expoData?.title
         } else {
             imageView.accessibilityLabel = DetailSetUp.koreaFlag
+            imageView.heightAnchor.constraint(lessThanOrEqualToConstant: 50).isActive = true
         }
         return imageView
     }
@@ -214,8 +213,6 @@ extension ExpoMainViewController {
         static let expoDescriptionLabel = "파리만국박람회 설명"
         static let mainStackViewLeadingWithFrameLayoutGuide: CGFloat = 10
         static let mainStackViewTrailingWithFrameLayoutGuide: CGFloat = -10
-        static let subStackViewTopWithDescriptionLabelBottom: CGFloat = 10
-        static let subStackViewMaxHeight: CGFloat = 100
-        static let nextViewButtonWidthAnchorMultiplier: CGFloat = 0.65
+        static let subStackViewTopWithDescriptionLabelBottom: CGFloat = 20
     }
 }
