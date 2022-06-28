@@ -74,6 +74,10 @@ final class ExpoMainViewController: UIViewController {
         return button
     }()
     
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        return .portrait
+    }
+    
     //MARK: - View Life Cycle
     
     override func viewDidLoad() {
@@ -152,6 +156,7 @@ final class ExpoMainViewController: UIViewController {
         subStackView.leadingAnchor.constraint(equalTo: mainStackView.leadingAnchor).isActive = true
         subStackView.trailingAnchor.constraint(equalTo: mainStackView.trailingAnchor).isActive = true
         subStackView.heightAnchor.constraint(lessThanOrEqualToConstant: DetailSetUp.subStackViewMaxHeight).isActive = true
+        nextViewButton.widthAnchor.constraint(greaterThanOrEqualTo: subStackView.widthAnchor, multiplier: DetailSetUp.nextViewButtonWidthAnchorMultiplier).isActive = true
     }
     
     @objc private func tappedNextViewButtonEvent() {
@@ -210,6 +215,7 @@ extension ExpoMainViewController {
         static let mainStackViewLeadingWithFrameLayoutGuide: CGFloat = 10
         static let mainStackViewTrailingWithFrameLayoutGuide: CGFloat = -10
         static let subStackViewTopWithDescriptionLabelBottom: CGFloat = 10
-        static let subStackViewMaxHeight: CGFloat = 50
+        static let subStackViewMaxHeight: CGFloat = 100
+        static let nextViewButtonWidthAnchorMultiplier: CGFloat = 0.65
     }
 }
